@@ -1,0 +1,15 @@
+{
+  "name": "kumabot",
+  "version": "0.0.1",
+  "description": "personal slack bot",
+  "main": "router.js",
+  "author": "kosamari (http://kosamari.com/)",
+  "license": "MIT",
+  "dependencies": {
+    "async": "^1.5.2",
+    "cron": "^1.1.0",
+    "lodash.where": "^3.1.0",
+    "slack-client": "^2.0.2",
+    "twit": "^2.2.2"
+  }
+}
