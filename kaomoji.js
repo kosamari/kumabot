@@ -1,3 +1,4 @@
+const botId = require('./config.js').slack.bot
 const S = require('./clients.js').web
 const dict = [
   'ฅ( •ω• ฅ)ｶﾞｵ-',
