@@ -17,8 +17,14 @@ let stream
 
 function filter (msg, item) {
   const text = msg.text
-  const userId = _where(item.users, { name:text.match(/^@?([a-zA-Z0-9_]){1,15}$/) })[0].id || msg.user.id_str
-  const replyto = msg.in_reply_to_user_id_str
+  // console.log(text.match(/^@?([a-zA-Z0-9_]){1,15}$/))
+  const mention = text.match(/^@?([a-zA-Z0-9_]{1,15})/)
+  const user = _where(item.users, { name: mention ? mention[1] : null })
+  console.log(mention)
+  const userId = msg.user.id_str
+  const replyto = user.length ? user[0].id : msg.in_reply_to_user_id_str
+  console.log(replyto)
+  
   const rt = msg.retweeted_status
   const userList = item.users.map(d => d.id)
 
@@ -63,7 +69,7 @@ function start () {
       console.log(results)
       if (results.reduce((p, n) => p + n) > 0) {
         if (stream) { stream.stop() }
-        stream = T.stream('statuses/filter', { follow: _uniq(config.lists.map(i => i.users).reduce((p, n) => p.concat(n))).join(',') })
+        stream = T.stream('statuses/filter', { follow: _uniq(config.lists.map(d => d.users.map(d => d.id)).reduce((p, n) => p.concat(n))).join(',') })
         stream.on('connected', response => {
           log.debug(`Connected to Twitter stream`)
           S.chat.postMessage(
