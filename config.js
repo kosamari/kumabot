@@ -1,28 +1,30 @@
 module.exports = {
-  twitter: {
-    consumer_key: '',
-    consumer_secret: '',
-    access_token: '',
-    access_token_secret: '',
-    user_id: ''// in digits like 123456
-  },
   slack: {
     token: '',
     admin: '', // in id like U0123456
     bot: '',   // in id like U0123456
-    log:''     // name of channel starting with #
+    log: ''    // name of channel starting with #
   },
   weather: {
     api_key: '',
     city: 'NewYork',
     zipcode: '10007'
   },
-  twitterlist: [
-    {
-      name: 'name', // name of Twitter list
-      channel: '#name' // name of Slack channel starting with #
-    }
-  ],
+  twitterlist: {
+    credential: {
+      consumer_key: '',
+      consumer_secret: '',
+      access_token: '',
+      access_token_secret: '',
+      user_id: ''// in digits like 123456
+    },
+    lists: [
+      {
+        name: 'name', // name of Twitter list
+        channel: '#name' // name of Slack channel starting with #
+      }
+    ]
+  },
   reminder: [
     {
       channel: '#general', // name of Slack channel starting with #
