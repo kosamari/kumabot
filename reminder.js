@@ -1,3 +1,4 @@
+'use strict'
 const CronJob = require('cron').CronJob
 const reminder = require('./config.js').reminder
 const S = require('./clients.js').web

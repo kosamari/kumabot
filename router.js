@@ -1,3 +1,4 @@
+'use strict'
 const config = require('./config.js')
 const EVENTS = require('slack-client').RTM_EVENTS
 const clients = require('./clients.js')

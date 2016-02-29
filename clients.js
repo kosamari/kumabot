@@ -1,3 +1,4 @@
+'use strict'
 const Twit = require('twit')
 const slack = require('slack-client')
 const config = require('./config.js')

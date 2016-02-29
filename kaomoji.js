@@ -1,3 +1,4 @@
+'use strict'
 const botId = require('./config.js').slack.bot
 const S = require('./clients.js').web
 const dict = [
@@ -12,7 +13,7 @@ const dict = [
 ]
 
 function reply (text, channel) {
-  if (text === `<@${botId}>`) {
+  if (text === `<@${botId}>`.trim() || text === `<@${botId}>:`.trim()) {
     S.chat.postMessage(channel,
       dict[Math.floor((Math.random() * dict.length))],
       {as_user: true}
