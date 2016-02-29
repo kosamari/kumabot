@@ -9,7 +9,8 @@ module.exports = {
   slack: {
     token: '',
     admin: '', // in id like U0123456
-    bot: ''    // in id like U0123456
+    bot: '',   // in id like U0123456
+    log:''     // name of channel starting with #
   },
   weather: {
     api_key: '',

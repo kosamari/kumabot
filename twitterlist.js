@@ -36,11 +36,16 @@ function openStream () {
         item.stream = T.stream('statuses/filter', { follow: item.users.join(',') })
         item.stream.on('connect', function (response) {
           log.debug(`trying to connect to ${item.name}`)
+          S.chat.postMessage(
+            config.slack.log,
+            `$connecting to Twitter "${item.name}" list`,
+            { as_user: true }
+          )
         })
         item.stream.on('connected', function (response) {
           log.debug(`connected to ${item.name}`)
           S.chat.postMessage(
-            item.channel,
+            config.slack.log,
             `${kao()} Connected to Twitter "${item.name}" list`,
             { as_user: true }
           )
@@ -48,13 +53,18 @@ function openStream () {
         item.stream.on('disconnect', function (disconnectMessage) {
           log.warn(`lost connection to ${item.name}`)
           S.chat.postMessage(
-            item.channel,
+            config.slack.log,
             `${kao()} Disconnected from Twitter "${item.name}" list`,
             { as_user: true }
           )
         })
         item.stream.on('reconnect', function (request, response, connectInterval) {
           log.debug(`reconnecting to ${item.name}`)
+          S.chat.postMessage(
+            config.slack.log,
+            `Recconecting to Twitter "${item.name}" list`,
+            { as_user: true }
+          )
         })
         item.stream.on('tweet', msg => {
           if (filter(item.users, msg.user.id_str, msg.in_reply_to_user_id_str, msg.retweeted_status) && item.last_id !== msg.id_str) {
