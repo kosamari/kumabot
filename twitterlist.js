@@ -15,11 +15,17 @@ const slacklog = require('./config.js').slack.log
 const T = new Twit(config.credential)
 let stream
 
-function filter (list, userId, replyto, rt) {
-  if (list.indexOf(userId) > -1) {
-    if (rt && list.indexOf(rt.user.id) > -1) {
+function filter (msg, item) {
+  const text = msg.text
+  const userId = _where(item.users, { name:text.match(/^@?([a-zA-Z0-9_]){1,15}$/) })[0].id || msg.user.id_str
+  const replyto = msg.in_reply_to_user_id_str
+  const rt = msg.retweeted_status
+  const userList = item.users.map(d => d.id)
+
+  if (userList.indexOf(userId) > -1) {
+    if (rt && userList.indexOf(rt.user.id) > -1) {
       return false
-    } else if (replyto === null || list.indexOf(replyto) > -1) {
+    } else if (replyto === null || userList.indexOf(replyto) > -1) {
       return true
     } else {
       return false
@@ -30,9 +36,6 @@ function filter (list, userId, replyto, rt) {
 }
 
 function arrayEquals (newArray, oldArray) {
-  if (!oldArray) {
-    oldArray = []
-  }
   if (newArray.length !== oldArray.length) {
     return false
   }
@@ -43,18 +46,25 @@ function start () {
   T.get('lists/list', {}, (_, lists, res) => {
     async.map(config.lists, function createStreams (item, next) {
       T.get('lists/members', { list_id: _where(lists, {name: item.name})[0].id_str, count: 5000 }, (_, data, response) => {
-        var users = data.users.map(function (d) { return d.id_str })
-        if (arrayEquals(users, item.users)) {
+        const newList = data.users.map(d => d.id_str)
+        const oldList = item.users ? item.users.map(d => d.id) : []
+        if (arrayEquals(newList, oldList)) {
           return next(null, false)
         }
-        item.users = users
+        item.users = data.users.map(d => {
+          return {
+            id: d.id_str,
+            name: d.screen_name
+          }
+        })
         return next(null, true)
       })
     }, function openStream (_, results) {
-      if (results.reduce((p, n) => p + n ) > 0) {
+      console.log(results)
+      if (results.reduce((p, n) => p + n) > 0) {
         if (stream) { stream.stop() }
         stream = T.stream('statuses/filter', { follow: _uniq(config.lists.map(i => i.users).reduce((p, n) => p.concat(n))).join(',') })
-        stream.on('connected', function (response) {
+        stream.on('connected', response => {
           log.debug(`Connected to Twitter stream`)
           S.chat.postMessage(
             slacklog,
@@ -62,10 +72,13 @@ function start () {
             { as_user: true }
           )
         })
-        stream.on('reconect', function (response) {
+        stream.on('connect', response => {
+          console.log('conecting yo')
+        })
+        stream.on('reconnect', response => {
           console.log('recconecting yo')
         })
-        stream.on('disconnect', function (disconnectMessage) {
+        stream.on('disconnect', disconnectMessage => {
           log.warn(`lost connection to Twitter`)
           S.chat.postMessage(
             slacklog,
@@ -75,7 +88,7 @@ function start () {
         })
         stream.on('tweet', msg => {
           config.lists.map((item) => {
-            if (filter(item.users, msg.user.id_str, msg.in_reply_to_user_id_str, msg.retweeted_status) && item.last_id !== msg.id_str) {
+            if (filter(msg, item) && item.last_id !== msg.id_str) {
               item.last_id = msg.id_str
               S.chat.postMessage(
                 item.channel,
