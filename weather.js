@@ -92,7 +92,7 @@ function reply (text, channel) {
     if (text.includes(' in ')) {
       return current(findLocation(text), channel)
     }
-    if (text.includes('out')) {
+    if (text.includes('is it')) {
       return current(null, channel)
     }
   }
