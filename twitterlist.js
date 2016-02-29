@@ -7,6 +7,7 @@ const T = clients.tw
 const S = clients.web
 const config = require('./config.js')
 const log = require('./logger.js')
+const kao =require('./kaomoji.js').random
 
 function filter (list, userId, replyto, rt) {
   if (list.indexOf(userId) > -1) {
@@ -38,9 +39,19 @@ function openStream () {
         })
         item.stream.on('connected', function (response) {
           log.debug(`connected to ${item.name}`)
+          S.chat.postMessage(
+            item.channel,
+            `${kao()} Connected to Twitter "${item.name}" list`,
+            { as_user: true }
+          )
         })
         item.stream.on('disconnect', function (disconnectMessage) {
           log.warn(`lost connection to ${item.name}`)
+          S.chat.postMessage(
+            item.channel,
+            `${kao()} Disconnected from Twitter "${item.name}" list`,
+            { as_user: true }
+          )
         })
         item.stream.on('reconnect', function (request, response, connectInterval) {
           log.debug(`reconnecting to ${item.name}`)

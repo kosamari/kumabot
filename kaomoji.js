@@ -15,10 +15,15 @@ const dict = [
 function reply (text, channel) {
   if (text === `<@${botId}>`.trim() || text === `<@${botId}>:`.trim()) {
     S.chat.postMessage(channel,
-      dict[Math.floor((Math.random() * dict.length))],
+      random(),
       {as_user: true}
     )
   }
 }
 
+function random (){
+  return dict[Math.floor((Math.random() * dict.length))]
+}
+
 exports.reply = reply
+exports.random = random
