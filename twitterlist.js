@@ -17,28 +17,27 @@ let stream
 
 function filter (msg, item) {
   const text = msg.text
-  // console.log(text.match(/^@?([a-zA-Z0-9_]){1,15}$/))
-  const mention = text.match(/^@?([a-zA-Z0-9_]{1,15})/)
-  const user = _where(item.users, { name: mention ? mention[1] : null })
-  console.log(mention)
-  const userId = msg.user.id_str
-  const replyto = user.length ? user[0].id : msg.in_reply_to_user_id_str
-  console.log(replyto)
-  
-  const rt = msg.retweeted_status
   const userList = item.users.map(d => d.id)
-
+  const userId = msg.user.id_str
+  const mention = text.match(/^@([a-zA-Z0-9_]{1,15})/)
+  const rt = msg.retweeted_status
   if (userList.indexOf(userId) > -1) {
-    if (rt && userList.indexOf(rt.user.id) > -1) {
-      return false
-    } else if (replyto === null || userList.indexOf(replyto) > -1) {
+    if (rt) {
+      if (userList.indexOf(rt.user.id) > -1) {
+        return false
+      }
       return true
-    } else {
+    }
+    if (mention) {
+      const user = _where(item.users, { name: mention[1] })
+      if (user.length) {
+        return true
+      }
       return false
     }
-  } else {
-    return false
+    return true
   }
+  return false
 }
 
 function arrayEquals (newArray, oldArray) {
@@ -66,7 +65,6 @@ function start () {
         return next(null, true)
       })
     }, function openStream (_, results) {
-      console.log(results)
       if (results.reduce((p, n) => p + n) > 0) {
         if (stream) { stream.stop() }
         stream = T.stream('statuses/filter', { follow: _uniq(config.lists.map(d => d.users.map(d => d.id)).reduce((p, n) => p.concat(n))).join(',') })
@@ -77,12 +75,6 @@ function start () {
             `${kao()} Connected to Twitter stream`,
             { as_user: true }
           )
-        })
-        stream.on('connect', response => {
-          console.log('conecting yo')
-        })
-        stream.on('reconnect', response => {
-          console.log('recconecting yo')
         })
         stream.on('disconnect', disconnectMessage => {
           log.warn(`lost connection to Twitter`)
