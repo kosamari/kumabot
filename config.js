@@ -10,6 +10,21 @@ module.exports = {
     city: 'NewYork',
     zipcode: '10007'
   },
+  twitter_reaction: {
+    fav: 'heart', // name of slack emoji
+    rt: 'repeat', // name of slack emoji
+    users: [
+      {
+        slack_id: '',  // slack if like U0123456
+        tw_credential: { // twitter credential to connect w/ a slack account
+          consumer_key: '',
+          consumer_secret: '',
+          access_token: '',
+          access_token_secret: ''
+        }
+      }
+    ]
+  },
   twitterlist: {
     credential: {
       consumer_key: '',
