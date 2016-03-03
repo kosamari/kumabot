@@ -1,5 +1,4 @@
 'use strict'
-const _where = require('lodash.where')
 const config = require('./config.js')
 const EVENTS = require('slack-client').RTM_EVENTS
 const clients = require('./clients.js')
@@ -10,7 +9,6 @@ const twitter_reaction = require('./twitter_reaction.js')
 const reminder = require('./reminder.js')
 const r = clients.rtm
 const S = clients.web
-const T = clients.twitter
 const adminId = config.slack.admin
 const botId = config.slack.bot
 
@@ -23,8 +21,12 @@ r.on(EVENTS.MESSAGE, msg => {
   // message that includes @<bot user>
   // TODO: should probably move to Botkit or somothing.
   if (msg.text && msg.text.includes(`<@${botId}>`)) {
+    if (msg.channel === 'G0PESJ6RX' && msg.text.includes('restart twitter')) {
+      return twitter_list.restart()
+    }
     kaomoji.reply(msg.text, msg.channel)
     weather.reply(msg.text.toLowerCase(), msg.channel)
+    return
   }
 })
 

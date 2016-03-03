@@ -104,3 +104,4 @@ function init () {
 }
 
 exports.init = init
+exports.restart = start
