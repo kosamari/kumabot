@@ -4,7 +4,6 @@ const async = require('async')
 const _where = require('lodash.where')
 const _uniq = require('lodash.uniq')
 const Twit = require('twit')
-
 const clients = require('./clients.js')
 const S = clients.web
 const config = require('./config.js').twitter_list

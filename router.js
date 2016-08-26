@@ -7,10 +7,20 @@ const kaomoji = require('./kaomoji.js')
 const twitter_list = require('./twitter_list.js')
 const twitter_reaction = require('./twitter_reaction.js')
 const reminder = require('./reminder.js')
+const book = require('./book.js')
 const r = clients.rtm
 const S = clients.web
 const adminId = config.slack.admin
 const botId = config.slack.bot
+
+const http = require('http')
+const server = http.createServer()
+server.listen(5432)
+server.on('request', (req, res) =>{
+  if (req.headers.host){
+    book()
+  }
+})
 
 weather.init()
 reminder.init()
