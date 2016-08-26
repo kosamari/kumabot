@@ -1,72 +1,51 @@
 module.exports = {
   slack: {
-    token: 'xoxb-23411951478-dRSFm5ZNvy7k2fxMw5v9aFw7',
-    admin: 'U064G4F25',
-    bot: 'U0PC3TZE2',
-    log: '#kumalog'
+    token: '',
+    admin: '', // in id like U0123456
+    bot: '',   // in id like U0123456
+    log: ''    // name of channel starting with #
   },
   weather: {
-    api_key: 'da56c49ac4b0e5a866431aa81ed36f8a',
-    city: 'Ridgewood,NY',
-    zipcode: '11385'
+    api_key: '',
+    city: 'NewYork',
+    zipcode: '10007'
   },
   twitter_reaction: {
-    fav: 'heart',
-    rt: 'repeat',
+    fav: 'heart', // name of slack emoji
+    rt: 'repeat', // name of slack emoji
     users: [
       {
-        slack_id: 'U064G4F25',
-        tw_credential: {
-          consumer_key: 'tKW9PJ8nbfyFgJcCtbRIoTjH1',
-          consumer_secret: 'bgkAGNNPlfBIoV3wFOhzmKp7sX4FxoltQUUC8PuR8TpTDUbmfu',
-          access_token: '8470842-ZBwCpi63WjlhBzIwUGVxuoPKlumyOoj2kxZXo8Cpe9',
-          access_token_secret: '36LgYMmEaVV9Rdt1jKBVPqJaeUUZrxI3MY4HuGO66q7Ml'
+        slack_id: '',  // slack if like U0123456
+        tw_credential: { // twitter credential to connect w/ a slack account
+          consumer_key: '',
+          consumer_secret: '',
+          access_token: '',
+          access_token_secret: ''
         }
       }
     ]
   },
-  twitter_list: {
+  twitterlist: {
     credential: {
-      consumer_key: 'tKW9PJ8nbfyFgJcCtbRIoTjH1',
-      consumer_secret: 'bgkAGNNPlfBIoV3wFOhzmKp7sX4FxoltQUUC8PuR8TpTDUbmfu',
-      access_token: '8470842-ZBwCpi63WjlhBzIwUGVxuoPKlumyOoj2kxZXo8Cpe9',
-      access_token_secret: '36LgYMmEaVV9Rdt1jKBVPqJaeUUZrxI3MY4HuGO66q7Ml',
-      user_id: '8470842'
+      consumer_key: '',
+      consumer_secret: '',
+      access_token: '',
+      access_token_secret: '',
+      user_id: ''// in digits like 123456
     },
     lists: [
       {
-        name: 'horse',
-        channel: '#horse'
-      },
-      {
-        name: 'JS',
-        channel: '#js'
-      },
-      {
-        name: 'textile',
-        channel: '#textile'
-      },
-      {
-        name: 'art_and_design',
-        channel: '#art_and_design'
-      },
-      {
-        name: 'data_and_art',
-        channel: '#data_and_art'
+        name: 'name', // name of Twitter list
+        channel: '#name' // name of Slack channel starting with #
       }
     ]
   },
   reminder: [
     {
-      channel: '#general',
-      comment: '<!channel> Time to see Jon yet again! Get :moneybag: ready.',
-      cron_time: '0 0 10 1 * *'
-    },
-    {
-      channel: '#general',
-      comment: '<!channel> Pay your :credit_card: bill! ',
-      cron_time: '0 0 10 3 * *'
+      channel: '#general', // name of Slack channel starting with #
+      comment: '<!channel> comment', // comment to post
+      cron_time: '0 0 10 1 * *' // cron job time string
     }
   ],
-  timezone: 'America/New_York'
+  timezone: 'America/New_York' // timezone string for cron job
 }
